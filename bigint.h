@@ -432,17 +432,11 @@ class bigint {
         bool operator>=(const bigint &b) const { return *this > b or *this == b; }
 
 
-        template<typename T> friend bool operator==(const bigint &a, const T &b) { return a == bigint(b); }
-        template<typename T> friend bool operator!=(const bigint &a, const T &b) { return a != bigint(b); }
-        template<typename T> friend bool operator<(const bigint &a, const T &b)  { return a < bigint(b); }
-        template<typename T> friend bool operator>(const bigint &a, const T &b)  { return a > bigint(b); }
-        template<typename T> friend bool operator<=(const bigint &a, const T &b) { return a <= bigint(b); }
-        template<typename T> friend bool operator>=(const bigint &a, const T &b) { return a >= bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator==(const T1 &a, const T2 &b) { return bigint(a) == bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator!=(const T1 &a, const T2 &b) { return bigint(a) != bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator<(const T1 &a, const T2 &b)  { return bigint(a) < bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator>(const T1 &a, const T2 &b)  { return bigint(a) > bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator<=(const T1 &a, const T2 &b) { return bigint(a) <= bigint(b); }
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator>=(const T1 &a, const T2 &b) { return bigint(a) >= bigint(b); }
 
-        template<typename T> friend bool operator==(const T &a, const bigint &b) { return bigint(a) == b; }
-        template<typename T> friend bool operator!=(const T &a, const bigint &b) { return bigint(a) != b; }
-        template<typename T> friend bool operator<(const T &a, const bigint &b)  { return bigint(a) < b; }
-        template<typename T> friend bool operator>(const T &a, const bigint &b)  { return bigint(a) > b; }
-        template<typename T> friend bool operator<=(const T &a, const bigint &b) { return bigint(a) <= b; }
-        template<typename T> friend bool operator>=(const T &a, const bigint &b) { return bigint(a) >= b; }
 };
