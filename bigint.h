@@ -6,11 +6,14 @@
 #include <algorithm>
 
 class bigint;  // Forward declaration
-template<typename T>
-using NotBigInt = std::enable_if_t<!std::is_same_v<bigint, std::decay_t<T>>>;
+
+// used so that x + 1 and 1 + x are both valid, where x is a bigint
+template<typename T1, typename T2>
+using OneBigInt = std::enable_if_t< (std::is_same_v<bigint, std::decay_t<T1>>) ^ (std::is_same_v<bigint, std::decay_t<T2>>) >;
 
 class bigint {
     private: 
+
         std::string str; // base-10 representation, excluding sign
         char sign = '+';
 
@@ -25,12 +28,25 @@ class bigint {
         }
 
     public: 
-        // Constructors for big int.
+
         bigint() {
             str = '0';  //default value
             sign = '+';
         }
 
+        bigint(const bigint& other) = default; // Copy constructor
+        bigint& operator=(const bigint& other) = default;  // Copy assignment
+        
+        bigint(bigint&& other) noexcept { // Move constructor
+            str = std::move(other.str);
+            sign = other.sign;
+        }
+
+        bigint& operator=(bigint&& other) noexcept {  // Move assignment
+            str = std::move(other.str);
+            sign = other.sign;
+            return *this;
+        }
 
         bigint(const std::string& s) {
             if (s[0] == '-' or s[0] == '+') {
@@ -129,18 +145,14 @@ class bigint {
             return ans;
         }
 
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator+(const bigint &n1, const T &n2) {
-          return n1 + bigint(n2);
+        template<typename T1, typename T2, typename = OneBigInt<T1,T2>> 
+        friend bigint operator+(const T1 &a, const T2 &b) { 
+            return bigint(a) + bigint(b);
         }
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator+(T n1, const bigint &n2) {
-          return bigint(n1) + n2;
-        }
-        template<typename T, typename = NotBigInt<T>>
-        bigint& operator+=(T n) {
-          (*this) = (*this) + bigint(n);
-          return (*this);
+
+        template<typename T> bigint& operator+=(const T &n) { 
+            (*this) = (*this) + bigint(n); 
+            return (*this);
         }
         
 
@@ -200,18 +212,14 @@ class bigint {
             }
         }
 
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator-(bigint &n1, T n2) {
-          return n1 - bigint(n2);
+        template<typename T1, typename T2, typename = OneBigInt<T1, T1>>
+        friend bigint operator-(const T1 &a, const T2 &b) { 
+            return bigint(a) - bigint(b); 
         }
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator-(T n1, bigint &n2) {
-          return bigint(n1) - n2;
-        }
-        template<typename T, typename = NotBigInt<T>>
-        bigint& operator-=(T n) {
-            (*this) = (*this) - bigint(n);
-            return (*this);
+
+        template<typename T> bigint& operator-=(const T &n) { 
+            (*this) = (*this) - bigint(n); 
+            return (*this); 
         }
 
         bigint operator*(const bigint &b) const {
@@ -247,16 +255,12 @@ class bigint {
             return ans;
         }
 
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator*(const bigint &n1, T n2) {
-          return n1 * bigint(n2);
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>>
+        friend bigint operator*(const T1 &a, const T2 &b) {
+          return bigint(a) * bigint(b);
         }
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator*(T n1, const bigint &n2) {
-          return bigint(n1) * n2;
-        }
-        template<typename T, typename = NotBigInt<T>>
-        bigint& operator *= (T n) {
+
+        template<typename T> bigint& operator *= (const T &n) {
             (*this) = (*this) * bigint(n);
             return (*this);
         }
@@ -322,16 +326,12 @@ class bigint {
             return left;
         }
 
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator/(bigint &n1, T n2) {
-            return n1 / bigint(n2);
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>>
+        friend bigint operator/(const T1 &a, const T2 &b) {
+            return bigint(a) / bigint(b);
         }
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator/(T n1, bigint &n2) {
-            return bigint(n1) / n2;
-        }
-        template<typename T, typename = NotBigInt<T>>
-        bigint& operator/=(T n) {
+
+        template<typename T> bigint& operator/=(const T &n) {
             (*this) = (*this) / bigint(n);
             return (*this);
         }
@@ -369,16 +369,12 @@ class bigint {
             return result;
         }
 
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator%(const bigint &n1, T n2) { 
-            return n1 % (bigint(n2));
+        template<typename T1, typename T2, typename = OneBigInt<T1, T2>>
+        friend bigint operator%(const T1 &a, const T2 &b) { 
+            return bigint(a) % bigint(b);
         }
-        template<typename T, typename = NotBigInt<T>>
-        friend bigint operator%(T n1, const bigint &n2) {
-            return bigint(n1) % n2;
-        }
-        template<typename T, typename = NotBigInt<T>>
-        bigint& operator%=(T n) {
+
+        template<typename T> bigint& operator%=(const T &n) {
             (*this) = (*this) % bigint(n);
             return (*this);
         }
