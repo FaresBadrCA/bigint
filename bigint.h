@@ -12,6 +12,7 @@ using NotBigInt = std::enable_if_t<!std::is_same_v<bigint, std::decay_t<T>>>;
 class bigint {
     private: 
         std::string str; // base-10 representation, excluding sign
+        char sign = '+';
 
         void trim() {
             if(str == "0") return;
@@ -24,7 +25,6 @@ class bigint {
         }
 
     public: 
-        char sign = '+';
         // Constructors for big int.
         bigint() {
             str = '0';  //default value
