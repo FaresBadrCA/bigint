@@ -1,8 +1,8 @@
-** bigint **
+# 🔢 bigint 🔢
 
 A header-only C++ implementation of arbitrary-length integers.
 
-## Usage
+## 🔧 Usage 🔧
 
 ```cpp
 #include "bigint.h"
