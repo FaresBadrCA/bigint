@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -135,9 +133,16 @@ class bigint {
             if (b.str == "0") return a;
 
             if (a.sign != b.sign) {
-                bigint ans = abs_diff(a,b);
-                ans.sign = ( (a.sign == '-' and abs_lte(a,b) ) || (b.sign == '-' and abs_lte(b,a)) ) ? '+' : '-';
-                return ans;
+                if (abs_lte(a,b)) {
+                  bigint ans = abs_diff(b,a);
+                  ans.sign = (ans.str == "0" ? '+' : b.sign);
+                  return ans;
+                }
+                else {
+                  bigint ans = abs_diff(a,b);
+                  ans.sign = (ans.str == "0" ? '+' : a.sign);
+                  return ans;
+                }
             }
 
             bigint ans = abs_sum(a,b);
@@ -440,3 +445,4 @@ class bigint {
         template<typename T1, typename T2, typename = OneBigInt<T1, T2>> friend bool operator>=(const T1 &a, const T2 &b) { return bigint(a) >= bigint(b); }
 
 };
+
