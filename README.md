@@ -24,6 +24,14 @@ int main() {
 }
 ```
 
+## 📋 ToDo List 📋
+    ✅ Addition / Subtraction / Multiplication / Division / Modulo
+    ✅ Relational Operators (==, !=, <, >, <=, >=)
+    ✅ Mixed-type operations (bigint + int, etc...)
+    ❌ Tests and benchmarks
+    ❌ Base 2^32 or 2^64 representation
+    ❌ Karatsuba multiplication
+    ❌ Newton-Raphson division
 
 ## 📚 Other large integer libraries 📚
 - https://github.com/rgroshanrg/bigint
